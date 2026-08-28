@@ -12,7 +12,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
           <div className="inline-flex items-center gap-2 bg-indigo-500/30 border border-indigo-400/30 px-3 py-1 rounded-full text-[12px] font-semibold text-indigo-200">
             <ShieldCheck size={14} /> Master Yönetim Paneli
           </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">FizyoPanel SaaS Platformu</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">FizyoPanel</h2>
           <p className="text-[13px] md:text-[14px] text-indigo-200 max-w-xl leading-relaxed">
             Buradan yeni klinikler oluşturabilir, giriş şifrelerini belirleyebilir, üyeliklerini yönetebilir ve özel hasta rezervasyon linklerini kopyalayabilirsiniz.
           </p>

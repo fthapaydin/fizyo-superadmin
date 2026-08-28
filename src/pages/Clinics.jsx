@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { TURKEY_CITIES } from '../lib/turkeyCities';
 import { 
   Building2, Plus, Search, Pencil, Trash2, KeyRound, Check, Copy, ExternalLink, X, ShieldAlert, Phone, Mail, MapPin 
 } from 'lucide-react';
@@ -21,9 +22,15 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
     password: '',
     status: 'aktif',
     plan: 'standart',
+    city: 'İstanbul',
+    district: 'Kadıköy',
     address: '',
+    theme_color: '#059669',
+    logo_url: '',
     notes: '',
   });
+
+  const selectedCityObj = TURKEY_CITIES.find((c) => c.name === formData.city) || TURKEY_CITIES[0];
 
   const filtered = clinics.filter(
     (c) =>
@@ -31,7 +38,9 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       c.owner_name.toLowerCase().includes(search.toLowerCase()) ||
       c.email.toLowerCase().includes(search.toLowerCase()) ||
       c.phone.includes(search) ||
-      c.slug.toLowerCase().includes(search.toLowerCase())
+      c.slug.toLowerCase().includes(search.toLowerCase()) ||
+      (c.city && c.city.toLowerCase().includes(search.toLowerCase())) ||
+      (c.district && c.district.toLowerCase().includes(search.toLowerCase()))
   );
 
   const slugify = (text) => {
@@ -53,6 +62,15 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
     }));
   };
 
+  const handleCityChange = (cityName) => {
+    const cityObj = TURKEY_CITIES.find((c) => c.name === cityName);
+    setFormData((prev) => ({
+      ...prev,
+      city: cityName,
+      district: cityObj?.districts[0] || 'Merkez',
+    }));
+  };
+
   const openAddModal = () => {
     setModalMode('add');
     setSelectedClinic(null);
@@ -62,10 +80,14 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       owner_name: '',
       phone: '',
       email: '',
-      password: Math.random().toString(36).slice(-8), // default random 8-char password
+      password: Math.random().toString(36).slice(-8),
       status: 'aktif',
       plan: 'standart',
+      city: 'İstanbul',
+      district: 'Kadıköy',
       address: '',
+      theme_color: '#059669',
+      logo_url: '',
       notes: '',
     });
     setShowModal(true);
@@ -83,7 +105,11 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       password: clinic.password || '',
       status: clinic.status || 'aktif',
       plan: clinic.plan || 'standart',
+      city: clinic.city || 'İstanbul',
+      district: clinic.district || 'Kadıköy',
       address: clinic.address || '',
+      theme_color: clinic.theme_color || '#059669',
+      logo_url: clinic.logo_url || '',
       notes: clinic.notes || '',
     });
     setShowModal(true);
@@ -167,7 +193,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Klinik ara (Ad, yetkili, telefon, slug)..."
+            placeholder="Klinik veya İl/İlçe ara (İstanbul, Kadıköy)..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full h-10 pl-10 pr-4 rounded-xl bg-white border border-gray-200 text-[13px] outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all shadow-2xs"
@@ -198,9 +224,16 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-[14px] shrink-0">
-                        {c.name.charAt(0)}
-                      </div>
+                      {c.logo_url ? (
+                        <img src={c.logo_url} alt="Logo" className="w-10 h-10 rounded-xl object-contain border border-gray-100 p-1" />
+                      ) : (
+                        <div
+                          className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-[14px] text-white shrink-0 shadow-2xs"
+                          style={{ backgroundColor: c.theme_color || '#059669' }}
+                        >
+                          {c.name.charAt(0)}
+                        </div>
+                      )}
                       <div>
                         <h4 className="font-bold text-gray-900 text-[15px]">{c.name}</h4>
                         <span className="text-[11px] text-gray-400 font-mono">slug: {c.slug}</span>
@@ -218,6 +251,13 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                     >
                       {c.status === 'aktif' ? '● Aktif' : '● Pasif'}
                     </button>
+                  </div>
+
+                  {/* Location Badge */}
+                  <div className="flex items-center gap-1.5 mb-3 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-700 w-fit">
+                    <MapPin size={12} className="text-indigo-600" />
+                    <span>{c.city || 'Belirtilmedi'}</span>
+                    {c.district && <span>/ {c.district}</span>}
                   </div>
 
                   {/* Details */}
@@ -239,10 +279,6 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                       <span className="font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
                         {c.password}
                       </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Paket:</span>
-                      <span className="capitalize font-semibold text-emerald-700">{c.plan || 'Standart'}</span>
                     </div>
                   </div>
                 </div>
@@ -341,6 +377,33 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                   />
                 </div>
 
+                {/* İl & İlçe Seçimi */}
+                <div>
+                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">Şehir (İl) *</label>
+                  <select
+                    value={formData.city}
+                    onChange={(e) => handleCityChange(e.target.value)}
+                    className="input-field bg-white"
+                  >
+                    {TURKEY_CITIES.map((c) => (
+                      <option key={c.name} value={c.name}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">İlçe *</label>
+                  <select
+                    value={formData.district}
+                    onChange={(e) => setFormData({ ...formData, district: e.target.value })}
+                    className="input-field bg-white"
+                  >
+                    {selectedCityObj.districts.map((d) => (
+                      <option key={d} value={d}>{d}</option>
+                    ))}
+                  </select>
+                </div>
+
                 <div>
                   <label className="block text-[12px] font-semibold text-gray-600 mb-1">İletişim Telefonu *</label>
                   <input
@@ -406,7 +469,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                   </select>
                 </div>
 
-                <div className="sm:col-span-2">
+                <div>
                   <label className="block text-[12px] font-semibold text-gray-600 mb-1">Logo URL (İsteğe Bağlı)</label>
                   <input
                     type="url"
@@ -418,10 +481,10 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">Klinik Adresi</label>
+                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">Açık Adres</label>
                   <input
                     type="text"
-                    placeholder="Kadıköy, İstanbul"
+                    placeholder="Mahalle, Cadde, No..."
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
                     className="input-field"
