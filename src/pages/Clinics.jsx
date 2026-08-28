@@ -390,6 +390,33 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                   </select>
                 </div>
 
+                <div>
+                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">Tema Rengi</label>
+                  <select
+                    value={formData.theme_color || '#059669'}
+                    onChange={(e) => setFormData({ ...formData, theme_color: e.target.value })}
+                    className="input-field bg-white"
+                  >
+                    <option value="#059669">Zümrüt Yeşili (#059669)</option>
+                    <option value="#2563eb">Mavi (#2563eb)</option>
+                    <option value="#4f46e5">İndigo (#4f46e5)</option>
+                    <option value="#7c3aed">Mor (#7c3aed)</option>
+                    <option value="#0d9488">Teal (#0d9488)</option>
+                    <option value="#ea580c">Turuncu (#ea580c)</option>
+                  </select>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <label className="block text-[12px] font-semibold text-gray-600 mb-1">Logo URL (İsteğe Bağlı)</label>
+                  <input
+                    type="url"
+                    placeholder="https://.../logo.png"
+                    value={formData.logo_url || ''}
+                    onChange={(e) => setFormData({ ...formData, logo_url: e.target.value })}
+                    className="input-field"
+                  />
+                </div>
+
                 <div className="sm:col-span-2">
                   <label className="block text-[12px] font-semibold text-gray-600 mb-1">Klinik Adresi</label>
                   <input
