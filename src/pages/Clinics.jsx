@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { TURKEY_CITIES } from '../lib/turkeyCities';
+import QRCodeModal from '../components/QRCodeModal';
 import { 
-  Building2, Plus, Search, Pencil, Trash2, KeyRound, Check, Copy, ExternalLink, X, ShieldAlert, Phone, Mail, MapPin 
+  Building2, Plus, Search, Pencil, Trash2, KeyRound, Check, Copy, ExternalLink, X, ShieldAlert, Phone, Mail, MapPin, QrCode 
 } from 'lucide-react';
 
 export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
@@ -12,6 +13,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [qrModalClinic, setQrModalClinic] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -285,14 +287,25 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
 
                 {/* Card Actions */}
                 <div className="mt-4 pt-2 flex items-center justify-between gap-2">
-                  <button
-                    onClick={() => copyBookingLink(c.slug, c.id)}
-                    className="h-8 px-2.5 rounded-lg border border-teal-200 bg-teal-50/70 hover:bg-teal-100 text-teal-700 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-                    title="Hastaların kullanacağı randevu linkini kopyala"
-                  >
-                    {isCopied ? <Check size={12} className="text-teal-600" /> : <Copy size={12} />}
-                    <span>{isCopied ? 'Kopyalandı!' : 'Rezervasyon Linki'}</span>
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => copyBookingLink(c.slug, c.id)}
+                      className="h-8 px-2.5 rounded-lg border border-teal-200 bg-teal-50/70 hover:bg-teal-100 text-teal-700 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      title="Hastaların kullanacağı randevu linkini kopyala"
+                    >
+                      {isCopied ? <Check size={12} className="text-teal-600" /> : <Copy size={12} />}
+                      <span>{isCopied ? 'Kopyalandı!' : 'Rezervasyon Linki'}</span>
+                    </button>
+
+                    <button
+                      onClick={() => setQrModalClinic(c)}
+                      className="h-8 px-2.5 rounded-lg border border-purple-200 bg-purple-50/70 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                      title="Masaüstü QR Standını Görüntüle ve Yazdır"
+                    >
+                      <QrCode size={12} className="text-purple-600" />
+                      <span>QR Standı</span>
+                    </button>
+                  </div>
 
                   <div className="flex items-center gap-1">
                     <button
@@ -511,6 +524,11 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
             </form>
           </div>
         </div>
+      )}
+
+      {/* QR Code Stand Modal */}
+      {qrModalClinic && (
+        <QRCodeModal clinic={qrModalClinic} onClose={() => setQrModalClinic(null)} />
       )}
     </div>
   );
