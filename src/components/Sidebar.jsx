@@ -1,10 +1,11 @@
 import { 
-  Building2, LayoutDashboard, Settings, LogOut, ShieldCheck, ExternalLink, Menu, X 
+  Building2, LayoutDashboard, Settings, LogOut, ShieldCheck, ExternalLink, Menu, X, Megaphone 
 } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'clinics', label: 'Klinikler', icon: Building2 },
+  { id: 'announcements', label: 'Duyurular & Kampanya', icon: Megaphone },
 ];
 
 export default function Sidebar({ activeTab, setActiveTab, mobileOpen, setMobileOpen, onLogout, clinicCount = 0 }) {

@@ -5,11 +5,13 @@ import Header from './components/Header';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Clinics from './pages/Clinics';
+import Announcements from './pages/Announcements';
 import { Loader2 } from 'lucide-react';
 
 const pageMeta = {
-  dashboard: { title: 'Süper Admin Dashboard', subtitle: 'Platform geneli performans ve istatistikler' },
-  clinics:   { title: 'Klinik Yönetimi',       subtitle: 'Kayıtlı klinikleri ekleyin, düzenleyin ve yönetin' },
+  dashboard:     { title: 'Süper Admin Dashboard',     subtitle: 'Platform geneli performans ve istatistikler' },
+  clinics:       { title: 'Klinik Yönetimi',           subtitle: 'Kayıtlı klinikleri ekleyin, düzenleyin ve yönetin' },
+  announcements: { title: 'Duyurular & Kampanya',      subtitle: 'Tüm klinik panellerine canlı duyuru ve kampanya yayını yapın' },
 };
 
 function App() {
@@ -113,6 +115,9 @@ function App() {
                     refresh={fetchData}
                     initialAddOpen={triggerAddClinic}
                   />
+                )}
+                {activeTab === 'announcements' && (
+                  <Announcements />
                 )}
               </>
             )}
