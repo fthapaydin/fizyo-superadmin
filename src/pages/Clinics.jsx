@@ -209,10 +209,9 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
 
         <button
           onClick={openAddModal}
-          className="h-10 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-[13px] font-semibold flex items-center gap-2 shadow-md shadow-indigo-600/20 transition-all cursor-pointer"
+          className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[12px] font-semibold transition-colors cursor-pointer shadow-2xs"
         >
-          <Plus size={16} />
-          <span>Yeni Klinik Tanımla</span>
+          + Yeni Klinik Tanımla
         </button>
       </div>
 
@@ -226,64 +225,62 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
           filtered.map((c) => {
             const isCopied = copiedId === c.id;
             return (
-              <div key={c.id} className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div key={c.id} className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs flex flex-col justify-between">
                 <div>
                   {/* Header */}
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="flex items-center gap-3">
                       {c.logo_url ? (
-                        <img src={c.logo_url} alt="Logo" className="w-10 h-10 rounded-xl object-contain border border-gray-100 p-1" />
+                        <img src={c.logo_url} alt="Logo" className="w-10 h-10 rounded-lg object-contain border border-slate-200 p-1" />
                       ) : (
                         <div
-                          className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-[14px] text-white shrink-0 shadow-2xs"
-                          style={{ backgroundColor: c.theme_color || '#059669' }}
+                          className="w-10 h-10 rounded-lg bg-slate-100 text-slate-800 border border-slate-200 flex items-center justify-center font-bold text-[14px] shrink-0"
                         >
                           {c.name.charAt(0)}
                         </div>
                       )}
                       <div>
-                        <h4 className="font-bold text-gray-900 text-[15px]">{c.name}</h4>
-                        <span className="text-[11px] text-gray-400 font-mono">slug: {c.slug}</span>
+                        <h4 className="font-bold text-slate-900 text-[14px]">{c.name}</h4>
+                        <span className="text-[11px] text-slate-400 font-mono">slug: {c.slug}</span>
                       </div>
                     </div>
 
                     <button
                       onClick={() => handleToggleStatus(c)}
-                      className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer ${
+                      className={`px-2 py-0.5 rounded text-[10px] font-semibold transition-colors cursor-pointer ${
                         c.status === 'aktif'
-                          ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                          : 'bg-red-50 text-red-700 hover:bg-red-100'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-slate-100 text-slate-600 border border-slate-200'
                       }`}
                       title="Durumu değiştirmek için tıklayın"
                     >
-                      {c.status === 'aktif' ? '● Aktif' : '● Pasif'}
+                      {c.status === 'aktif' ? 'Aktif' : 'Pasif'}
                     </button>
                   </div>
 
                   {/* Location Badge */}
-                  <div className="flex items-center gap-1.5 mb-3 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-100 text-[11px] font-semibold text-slate-700 w-fit">
-                    <MapPin size={12} className="text-indigo-600" />
+                  <div className="text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded w-fit mb-3">
                     <span>{c.city || 'Belirtilmedi'}</span>
-                    {c.district && <span>/ {c.district}</span>}
+                    {c.district && <span> / {c.district}</span>}
                   </div>
 
                   {/* Details */}
-                  <div className="space-y-2 py-3 border-y border-gray-100 text-[12px] text-gray-600">
+                  <div className="space-y-2 py-3 border-y border-slate-100 text-[12px] text-slate-600">
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Yetkili:</span>
-                      <span className="font-medium text-gray-800">{c.owner_name}</span>
+                      <span className="text-slate-400">Yetkili:</span>
+                      <span className="font-medium text-slate-800">{c.owner_name}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Telefon:</span>
-                      <span className="font-medium text-gray-800">{c.phone}</span>
+                      <span className="text-slate-400">Telefon:</span>
+                      <span className="font-medium text-slate-800">{c.phone}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Giriş E-Posta:</span>
-                      <span className="font-mono text-gray-700">{c.email}</span>
+                      <span className="text-slate-400">Giriş E-Posta:</span>
+                      <span className="font-mono text-slate-700">{c.email}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Giriş Şifresi:</span>
-                      <span className="font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+                      <span className="text-slate-400">Giriş Şifresi:</span>
+                      <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
                         {c.password}
                       </span>
                     </div>
@@ -295,37 +292,33 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
                   <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => copyBookingLink(c.slug, c.id)}
-                      className="h-8 px-2.5 rounded-lg border border-teal-200 bg-teal-50/70 hover:bg-teal-100 text-teal-700 text-[11px] font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="h-7 px-2.5 rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[11px] font-medium transition-colors cursor-pointer"
                       title="Hastaların kullanacağı randevu linkini kopyala"
                     >
-                      {isCopied ? <Check size={12} className="text-teal-600" /> : <Copy size={12} />}
-                      <span>{isCopied ? 'Kopyalandı!' : 'Rezervasyon Linki'}</span>
+                      {isCopied ? 'Kopyalandı' : 'Randevu Linki'}
                     </button>
 
                     <button
                       onClick={() => setQrModalClinic(c)}
-                      className="h-8 px-2.5 rounded-lg border border-purple-200 bg-purple-50/70 hover:bg-purple-100 text-purple-700 text-[11px] font-semibold flex items-center gap-1 transition-colors cursor-pointer"
+                      className="h-7 px-2.5 rounded-md border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-[11px] font-medium transition-colors cursor-pointer"
                       title="Masaüstü QR Standını Görüntüle ve Yazdır"
                     >
-                      <QrCode size={12} className="text-purple-600" />
-                      <span>QR Standı</span>
+                      QR Standı
                     </button>
                   </div>
 
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => openEditModal(c)}
-                      className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-indigo-600 transition-colors cursor-pointer"
-                      title="Kliniği Düzenle / Şifre Değiştir"
+                      className="px-2 py-1 rounded text-[11px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
                     >
-                      <Pencil size={15} />
+                      Düzenle
                     </button>
                     <button
                       onClick={() => handleDelete(c)}
-                      className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors cursor-pointer"
-                      title="Kliniği Sil"
+                      className="px-2 py-1 rounded text-[11px] font-medium text-rose-600 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer"
                     >
-                      <Trash2 size={15} />
+                      Sil
                     </button>
                   </div>
                 </div>
