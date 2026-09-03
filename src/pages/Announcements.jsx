@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { 
-  Megaphone, Plus, Trash2, CheckCircle2, AlertTriangle, Info, Sparkles, X, ToggleLeft, ToggleRight, Radio 
+  Megaphone, Plus, Trash2, CheckCircle2, AlertTriangle, Info, Sparkles, X, Radio 
 } from 'lucide-react';
 
 const TYPES = [
@@ -12,6 +12,7 @@ const TYPES = [
 ];
 
 export default function Announcements() {
+  const { toast } = useToast();
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -60,7 +61,7 @@ export default function Announcements() {
       setForm({ title: '', message: '', type: 'campaign', is_active: true });
       fetchAnnouncements();
     } catch (err) {
-      alert(err.message || 'Duyuru kaydedilirken hata oluştu.');
+      toast.success(err.message || 'Duyuru kaydedilirken hata oluştu.');
     } finally {
       setSubmitting(false);
     }
@@ -76,7 +77,7 @@ export default function Announcements() {
       if (error) throw error;
       fetchAnnouncements();
     } catch (err) {
-      alert(err.message || 'Durum güncellenemedi.');
+      toast.success(err.message || 'Durum güncellenemedi.');
     }
   };
 
@@ -92,7 +93,7 @@ export default function Announcements() {
       if (error) throw error;
       fetchAnnouncements();
     } catch (err) {
-      alert(err.message || 'Silme işlemi başarısız.');
+      toast.success(err.message || 'Silme işlemi başarısız.');
     }
   };
 

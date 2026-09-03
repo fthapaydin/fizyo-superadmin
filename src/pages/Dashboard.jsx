@@ -12,7 +12,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
           <div className="inline-flex items-center gap-2 bg-indigo-500/30 border border-indigo-400/30 px-3 py-1 rounded-full text-[12px] font-semibold text-indigo-200">
             <ShieldCheck size={14} /> Master Yönetim Paneli
           </div>
-          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">FizyoPanel</h2>
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">Fizyotim</h2>
           <p className="text-[13px] md:text-[14px] text-indigo-200 max-w-xl leading-relaxed">
             Buradan yeni klinikler oluşturabilir, giriş şifrelerini belirleyebilir, üyeliklerini yönetebilir ve özel hasta rezervasyon linklerini kopyalayabilirsiniz.
           </p>
@@ -28,7 +28,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all cursor-default hover:-translate-y-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Toplam Klinik</span>
             <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -39,7 +39,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
           <p className="text-[11px] text-gray-400 mt-1">{activeCount} aktif · {trialCount} deneme</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all cursor-default hover:-translate-y-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Aktif Klinikler</span>
             <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -50,7 +50,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
           <p className="text-[11px] text-gray-400 mt-1">Sisteme erişebilen klinikler</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all cursor-default hover:-translate-y-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Sistemdeki Hasta</span>
             <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -61,7 +61,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
           <p className="text-[11px] text-gray-400 mt-1">Tüm kliniklerin toplamı</p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-sm hover:shadow-md hover:border-emerald-200 transition-all cursor-default hover:-translate-y-1">
           <div className="flex items-center justify-between mb-3">
             <span className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider">Toplam Randevu</span>
             <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
@@ -130,6 +130,7 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
                     </td>
                     <td className="px-5 py-3.5">
                       {c.status === 'aktif' ? (
+
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-semibold">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Aktif
                         </span>

@@ -1,4 +1,37 @@
-import { useState } from 'react';
+﻿const fs = require('fs');
+const path = require('path');
+
+const baseDir = process.cwd();
+
+function walk(dir, callback) {
+  fs.readdirSync(dir).forEach(f => {
+    const dirPath = path.join(dir, f);
+    if (fs.statSync(dirPath).isDirectory()) {
+      if (f !== 'node_modules' && f !== '.git' && f !== 'dist') {
+        walk(dirPath, callback);
+      }
+    } else {
+      if (['.jsx', '.js', '.html', '.css', '.json'].includes(path.extname(f))) {
+        callback(dirPath);
+      }
+    }
+  });
+}
+
+// 1. Global rebrand
+walk(baseDir, (filePath) => {
+  let content = fs.readFileSync(filePath, 'utf-8');
+  let newContent = content.replace(/Fizyotim/g, 'Fizyotim');
+  newContent = newContent.replace(/admin@fizyopanel\.com/g, 'admin@fizyotim.com');
+  if (content !== newContent) {
+    fs.writeFileSync(filePath, newContent, 'utf-8');
+  }
+});
+
+// 2. Update Login.jsx
+const loginPath = path.join(baseDir, 'src', 'pages', 'Login.jsx');
+if (fs.existsSync(loginPath)) {
+  const loginContent = import { useState } from 'react';
 import { ShieldCheck, Lock, Mail, Loader2, ArrowRight, LayoutDashboard, Building2, Users } from 'lucide-react';
 
 export default function Login({ onLogin }) {
@@ -35,6 +68,7 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="min-h-screen bg-[#f8fafb] flex">
+      {/* Left Showcase Panel */}
       <div className="hidden lg:flex flex-col justify-between w-[55%] bg-gradient-to-br from-indigo-950 via-slate-900 to-emerald-950 p-12 relative overflow-hidden">
         <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500/20 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/20 rounded-full blur-[120px]"></div>
@@ -56,9 +90,27 @@ export default function Login({ onLogin }) {
           <p className="text-lg text-slate-300 leading-relaxed font-medium mb-10">
             Fizyotim Master Yönetim Paneli ile platformdaki tüm klinikleri, kullanıcıları ve randevu sistemlerini güvenle kontrol edin.
           </p>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center mb-3">
+                <Building2 size={20} />
+              </div>
+              <h3 className="text-sm font-semibold text-white mb-1">Klinik Yönetimi</h3>
+              <p className="text-xs text-slate-400">Sınırsız klinik hesabı oluşturun ve yetkilendirin.</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center mb-3">
+                <LayoutDashboard size={20} />
+              </div>
+              <h3 className="text-sm font-semibold text-white mb-1">Merkezi Kontrol</h3>
+              <p className="text-xs text-slate-400">Tüm istatistikleri ve performans verilerini izleyin.</p>
+            </div>
+          </div>
         </div>
       </div>
 
+      {/* Right Login Card */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 bg-white relative">
         <div className="w-full max-w-[420px]">
           <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
@@ -145,3 +197,8 @@ export default function Login({ onLogin }) {
     </div>
   );
 }
+;
+  fs.writeFileSync(loginPath, loginContent, 'utf-8');
+}
+
+console.log('Rebrand and Login update done.');

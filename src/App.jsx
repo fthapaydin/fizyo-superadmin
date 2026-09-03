@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -9,9 +9,9 @@ import Announcements from './pages/Announcements';
 import { Loader2 } from 'lucide-react';
 
 const pageMeta = {
-  dashboard:     { title: 'Süper Admin Dashboard',     subtitle: 'Platform geneli performans ve istatistikler' },
-  clinics:       { title: 'Klinik Yönetimi',           subtitle: 'Kayıtlı klinikleri ekleyin, düzenleyin ve yönetin' },
-  announcements: { title: 'Duyurular & Kampanya',      subtitle: 'Tüm klinik panellerine canlı duyuru ve kampanya yayını yapın' },
+  dashboard:     { title: 'SÃ¼per Admin Dashboard',     subtitle: 'Platform geneli performans ve istatistikler' },
+  clinics:       { title: 'Klinik YÃ¶netimi',           subtitle: 'KayÄ±tlÄ± klinikleri ekleyin, dÃ¼zenleyin ve yÃ¶netin' },
+  announcements: { title: 'Duyurular & Kampanya',      subtitle: 'TÃ¼m klinik panellerine canlÄ± duyuru ve kampanya yayÄ±nÄ± yapÄ±n' },
 };
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
         sessionCount: sessionsRes.count || 0,
       });
     } catch (err) {
-      console.error('Veri çekme hatası:', err);
+      console.error('Veri Ã§ekme hatasÄ±:', err);
     } finally {
       setLoading(false);
     }
@@ -129,3 +129,4 @@ function App() {
 }
 
 export default App;
+

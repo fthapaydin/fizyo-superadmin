@@ -1,10 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+::selection {
+  background-color: rgba(16, 185, 129, 0.2); /* Emerald 500 w/ opacity */
+  color: #064e3b; /* Emerald 900 */
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
 
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f8fafb;
   color: #1e293b;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .input-field {
@@ -21,6 +47,6 @@ body {
 }
 
 .input-field:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+  border-color: #10b981; /* Emerald */
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
 }

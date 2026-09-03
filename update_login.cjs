@@ -1,4 +1,7 @@
-import { useState } from 'react';
+﻿const fs = require('fs');
+const path = require('path');
+const loginPath = path.join(process.cwd(), 'src', 'pages', 'Login.jsx');
+const content = `import { useState } from 'react';
 import { ShieldCheck, Lock, Mail, Loader2, ArrowRight, LayoutDashboard, Building2, Users } from 'lucide-react';
 
 export default function Login({ onLogin }) {
@@ -145,3 +148,5 @@ export default function Login({ onLogin }) {
     </div>
   );
 }
+`;
+fs.writeFileSync(loginPath, content, 'utf8');

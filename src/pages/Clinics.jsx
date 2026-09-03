@@ -1,14 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useToast } from '../components/ui/Toast';
 import { supabase } from '../lib/supabase';
 import { TURKEY_CITIES } from '../lib/turkeyCities';
 import QRCodeModal from '../components/QRCodeModal';
 import { 
-  Building2, Plus, Search, Pencil, Trash2, KeyRound, Check, Copy, ExternalLink, X, ShieldAlert, Phone, Mail, MapPin, QrCode 
+  Building2, Plus, Search, Pencil, Trash2, Check, Copy, ExternalLink, X, MapPin, QrCode 
 } from 'lucide-react';
 
 export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
+  const { toast } = useToast();
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(initialAddOpen);
+  useEffect(() => {
+    if (initialAddOpen) setShowModal(true);
+  }, [initialAddOpen]);
   const [modalMode, setModalMode] = useState('add'); // 'add' | 'edit'
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -120,7 +125,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.password || !formData.slug) {
-      alert('Lütfen zorunlu alanları doldurunuz.');
+      toast.error('Lütfen zorunlu alanları doldurunuz.');
       return;
     }
 
@@ -150,7 +155,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       setShowModal(false);
       refresh();
     } catch (err) {
-      alert(err.message || 'Klinik kaydedilirken hata oluştu. E-posta veya slug benzersiz olmalıdır.');
+      toast.error(err.message || 'Klinik kaydedilirken hata oluştu. E-posta veya slug benzersiz olmalıdır.');
     } finally {
       setSubmitting(false);
     }
@@ -165,7 +170,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       if (error) throw error;
       refresh();
     } catch (err) {
-      alert(err.message || 'Silme işlemi sırasında hata oluştu.');
+      toast.error(err.message || 'Silme işlemi sırasında hata oluştu.');
     }
   };
 
@@ -176,7 +181,7 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       if (error) throw error;
       refresh();
     } catch (err) {
-      alert(err.message || 'Durum güncellenemedi.');
+      toast.error(err.message || 'Durum güncellenemedi.');
     }
   };
 
