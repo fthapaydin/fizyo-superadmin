@@ -209,9 +209,10 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
 
         <button
           onClick={openAddModal}
-          className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[12px] font-semibold transition-colors cursor-pointer shadow-2xs"
+          className="flex items-center gap-1.5 h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-[12px] font-semibold transition-colors cursor-pointer shadow-2xs"
         >
-          + Yeni Klinik Tanımla
+          <Plus size={14} />
+          <span>+ Yeni Klinik Tanımla</span>
         </button>
       </div>
 

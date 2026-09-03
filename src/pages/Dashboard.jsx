@@ -1,4 +1,4 @@
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight, ExternalLink, Plus, Building2, CheckCircle2, Users, Calendar } from 'lucide-react';
 
 export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClinicClick }) {
   const activeCount = clinics.filter((c) => c.status === 'aktif').length;
@@ -20,34 +20,55 @@ export default function Dashboard({ clinics, stats, onNavigateClinics, onAddClin
 
         <button
           onClick={onAddClinicClick}
-          className="h-9 px-4 rounded-lg bg-white text-slate-900 hover:bg-slate-100 text-[12px] font-semibold transition-colors cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 h-9 px-4 rounded-lg bg-white text-slate-900 hover:bg-slate-100 text-[12px] font-semibold transition-colors cursor-pointer shrink-0"
         >
-          + Yeni Klinik Ekle
+          <Plus size={14} />
+          <span>+ Yeni Klinik Ekle</span>
         </button>
       </div>
 
       {/* Metrics Cards (Tek Renk Kurumsal Kutular) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs hover:border-slate-300 transition-colors">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Toplam Klinik</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Toplam Klinik</span>
+            <div className="w-7 h-7 rounded-lg bg-slate-100/70 text-slate-500 flex items-center justify-center">
+              <Building2 size={14} />
+            </div>
+          </div>
           <p className="text-2xl font-bold text-slate-900 tracking-tight">{clinics.length}</p>
           <p className="text-[11px] text-slate-500 mt-1">{activeCount} aktif · {trialCount} deneme</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs hover:border-slate-300 transition-colors">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Aktif Klinikler</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Aktif Klinikler</span>
+            <div className="w-7 h-7 rounded-lg bg-slate-100/70 text-slate-500 flex items-center justify-center">
+              <CheckCircle2 size={14} />
+            </div>
+          </div>
           <p className="text-2xl font-bold text-slate-900 tracking-tight">{activeCount}</p>
           <p className="text-[11px] text-slate-500 mt-1">Sisteme erişebilen klinikler</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs hover:border-slate-300 transition-colors">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Sistemdeki Hasta</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Sistemdeki Hasta</span>
+            <div className="w-7 h-7 rounded-lg bg-slate-100/70 text-slate-500 flex items-center justify-center">
+              <Users size={14} />
+            </div>
+          </div>
           <p className="text-2xl font-bold text-slate-900 tracking-tight">{stats.patientCount}</p>
           <p className="text-[11px] text-slate-500 mt-1">Tüm kliniklerin toplamı</p>
         </div>
 
         <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-2xs hover:border-slate-300 transition-colors">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">Toplam Randevu</span>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">Toplam Randevu</span>
+            <div className="w-7 h-7 rounded-lg bg-slate-100/70 text-slate-500 flex items-center justify-center">
+              <Calendar size={14} />
+            </div>
+          </div>
           <p className="text-2xl font-bold text-slate-900 tracking-tight">{stats.sessionCount}</p>
           <p className="text-[11px] text-slate-500 mt-1">Oluşturulan toplam seans</p>
         </div>
