@@ -1,4 +1,4 @@
-﻿import { 
+import { 
   Building2, LayoutDashboard, LogOut, ShieldCheck, ExternalLink, Menu, X, Megaphone 
 } from 'lucide-react';
 
@@ -14,12 +14,12 @@ export default function Sidebar({ activeTab, setActiveTab, mobileOpen, setMobile
       {/* Logo */}
       <div className="h-16 flex items-center justify-between px-6 border-b border-slate-800 shrink-0 bg-slate-950/60">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30 transition-transform duration-300 hover:scale-110">
-            <ShieldCheck size={18} className="text-white" />
+          <div className="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center shadow-md text-white font-black text-[13px] tracking-tight shrink-0">
+            FT
           </div>
           <div>
-            <span className="text-[14px] font-bold text-white tracking-tight block">Fizyotim</span>
-            <span className="text-[10px] text-emerald-400 font-semibold tracking-wider uppercase block">Süper Admin</span>
+            <span className="text-[14px] font-black text-white tracking-tight block">Fizyotim</span>
+            <span className="text-[9px] text-slate-400 font-bold tracking-wider uppercase block">SÜPER ADMİN</span>
           </div>
         </div>
         <button onClick={() => setMobileOpen(false)} className="md:hidden text-slate-400 hover:text-white transition-colors">
