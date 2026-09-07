@@ -63,7 +63,11 @@ export default function Announcements() {
     try {
       const { error } = await supabase
         .from('announcements')
-        .insert([form]);
+        .insert([{
+          ...form,
+          title: cleanText(form.title),
+          message: cleanText(form.message),
+        }]);
 
       if (error) throw error;
       setShowModal(false);
@@ -114,9 +118,8 @@ export default function Announcements() {
       {/* Top Toolbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-            <Megaphone size={20} className="text-indigo-600" />
-            <span>Klinik Panel İçi Duyuru &amp; Kampanya Yayını</span>
+          <h2 className="text-xl font-bold text-gray-900">
+            Klinik Panel İçi Duyuru &amp; Kampanya Yayını
           </h2>
           <p className="text-[12px] text-gray-500 mt-0.5">
             Buradan oluşturacağınız duyurular tüm kliniklerin panellerinde anında canlı olarak yayınlanır.
@@ -145,7 +148,6 @@ export default function Announcements() {
         ) : (
           announcements.map((item) => {
             const typeConfig = TYPES.find((t) => t.value === item.type) || TYPES[0];
-            const Icon = typeConfig.icon;
 
             return (
               <div
@@ -154,32 +156,26 @@ export default function Announcements() {
                   item.is_active ? 'border-gray-200/90' : 'border-gray-100 opacity-60 bg-gray-50/50'
                 }`}
               >
-                <div className="flex items-start gap-3.5">
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border ${typeConfig.color}`}>
-                    <Icon size={18} />
-                  </div>
-
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <h4 className="font-bold text-gray-900 text-[15px]">{item.title}</h4>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${typeConfig.color}`}>
-                        {typeConfig.label}
+                <div className="space-y-1.5 flex-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${typeConfig.color}`}>
+                      {typeConfig.label}
+                    </span>
+                    <h4 className="font-bold text-gray-900 text-[15px]">{cleanText(item.title)}</h4>
+                    {item.is_active ? (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        ● Canlıda Yayında
                       </span>
-                      {item.is_active ? (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                          ● Canlıda Yayında
-                        </span>
-                      ) : (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
-                          ○ Pasif
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[13px] text-gray-600 leading-relaxed whitespace-pre-line">{item.message}</p>
-                    <p className="text-[10px] text-gray-400">
-                      {new Date(item.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
-                    </p>
+                    ) : (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                        ○ Pasif
+                      </span>
+                    )}
                   </div>
+                  <p className="text-[13px] text-gray-600 leading-relaxed whitespace-pre-line">{cleanText(item.message)}</p>
+                  <p className="text-[10px] text-gray-400">
+                    {new Date(item.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
 
                 <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
@@ -214,10 +210,7 @@ export default function Announcements() {
           <div className="absolute inset-0 bg-black/40 backdrop-blur-xs" onClick={() => setShowModal(false)} />
           <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-6 z-10 animate-in zoom-in-95 duration-200 border border-gray-100">
             <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
-              <div className="flex items-center gap-2">
-                <Megaphone size={18} className="text-indigo-600" />
-                <h3 className="text-[16px] font-bold text-gray-900">Tüm Kliniklere Duyuru Yayınla</h3>
-              </div>
+              <h3 className="text-[16px] font-bold text-gray-900">Tüm Kliniklere Duyuru Yayınla</h3>
               <button
                 onClick={() => setShowModal(false)}
                 className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer"
@@ -232,7 +225,7 @@ export default function Announcements() {
                 <input
                   type="text"
                   required
-                  placeholder="Örn: 🎉 Yeni Güncelleme: 81 İl Desteği Eklendi!"
+                  placeholder="Örn: Yeni Güncelleme: 81 İl Desteği Eklendi!"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
                   className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-[13px] text-gray-900 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
@@ -247,13 +240,12 @@ export default function Announcements() {
                       key={t.value}
                       type="button"
                       onClick={() => setForm({ ...form, type: t.value })}
-                      className={`p-2.5 rounded-xl border text-[12px] font-semibold flex items-center gap-2 transition-all cursor-pointer ${
+                      className={`p-2.5 rounded-xl border text-[12px] font-semibold text-center transition-all cursor-pointer ${
                         form.type === t.value
                           ? `${t.color} ring-2 ring-indigo-500/20`
                           : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                       }`}
                     >
-                      <t.icon size={14} />
                       <span>{t.label}</span>
                     </button>
                   ))}
