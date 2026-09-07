@@ -4,7 +4,8 @@ import { supabase } from '../lib/supabase';
 import { TURKEY_CITIES } from '../lib/turkeyCities';
 import QRCodeModal from '../components/QRCodeModal';
 import { 
-  Building2, Plus, Search, Pencil, Trash2, Check, Copy, ExternalLink, X, MapPin, QrCode 
+  Building2, Plus, Search, Pencil, Trash2, Check, Copy, ExternalLink, X, MapPin, QrCode,
+  Eye, EyeOff
 } from 'lucide-react';
 
 export default function Clinics({ clinics, refresh, initialAddOpen = false, initialData = null }) {
@@ -16,6 +17,12 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false, init
   const [copiedId, setCopiedId] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [qrModalClinic, setQrModalClinic] = useState(null);
+  const [showModalPassword, setShowModalPassword] = useState(false);
+  const [visiblePassIds, setVisiblePassIds] = useState({});
+
+  const togglePassVisibility = (id) => {
+    setVisiblePassIds(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const [formData, setFormData] = useState({
     name: '',
@@ -312,9 +319,19 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false, init
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-slate-400">Giriş Şifresi:</span>
-                      <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded">
-                        {c.password}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded text-[12px]">
+                          {visiblePassIds[c.id] ? c.password : '••••••••'}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => togglePassVisibility(c.id)}
+                          className="text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
+                          title={visiblePassIds[c.id] ? "Şifreyi Gizle" : "Şifreyi Göster"}
+                        >
+                          {visiblePassIds[c.id] ? <EyeOff size={13} /> : <Eye size={13} />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -473,14 +490,24 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false, init
 
                 <div>
                   <label className="block text-[12px] font-semibold text-gray-600 mb-1">Giriş Şifresi *</label>
-                  <input
-                    required
-                    type="text"
-                    placeholder="Şifre"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="input-field font-mono"
-                  />
+                  <div className="relative">
+                    <input
+                      required
+                      type={showModalPassword ? "text" : "password"}
+                      placeholder="Şifre"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className="input-field font-mono pr-9"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowModalPassword(!showModalPassword)}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer p-0.5"
+                      title={showModalPassword ? "Şifreyi Gizle" : "Şifreyi Göster"}
+                    >
+                      {showModalPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div>
