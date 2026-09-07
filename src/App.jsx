@@ -8,6 +8,7 @@ import Clinics from './pages/Clinics';
 import Announcements from './pages/Announcements';
 import DemoRequests from './pages/DemoRequests';
 import { fetchAllDemoRequests } from './lib/demoRequestsUtils';
+import OfflineBanner from './components/OfflineBanner';
 import { Loader2 } from 'lucide-react';
 
 const pageMeta = {
@@ -81,13 +82,19 @@ function App() {
   };
 
   if (!adminUser) {
-    return <Login onLogin={setAdminUser} />;
+    return (
+      <>
+        <OfflineBanner />
+        <Login onLogin={setAdminUser} />
+      </>
+    );
   }
 
   const meta = pageMeta[activeTab] || pageMeta.dashboard;
 
   return (
-    <div className="flex h-screen overflow-hidden font-[Inter]">
+    <div className="flex h-screen overflow-hidden font-[Inter] relative">
+      <OfflineBanner />
       <Sidebar
         activeTab={activeTab}
         setActiveTab={(tab) => {
