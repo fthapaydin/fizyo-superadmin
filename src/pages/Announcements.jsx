@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { useToast } from '../components/ui/Toast';
-import { 
-  Megaphone, Plus, Trash2, CheckCircle2, AlertTriangle, Info, Sparkles, X, Radio 
-} from 'lucide-react';
+import { Plus, Trash2, X } from 'lucide-react';
+
+const EMOJI_REGEX = /[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]/gu;
+function cleanText(text) {
+  if (!text) return '';
+  return String(text).replace(EMOJI_REGEX, '').replace(/^\s*[-•]\s*/gm, '• ').trim();
+}
 
 const TYPES = [
-  { value: 'campaign', label: 'Kampanya / Fırsat', color: 'border-purple-200 bg-purple-50 text-purple-800', icon: Sparkles },
-  { value: 'info', label: 'Bilgilendirme / Güncelleme', color: 'border-blue-200 bg-blue-50 text-blue-800', icon: Info },
-  { value: 'warning', label: 'Önemli Uyarı', color: 'border-amber-200 bg-amber-50 text-amber-800', icon: AlertTriangle },
-  { value: 'success', label: 'Başarı / Tebrik', color: 'border-emerald-200 bg-emerald-50 text-emerald-800', icon: CheckCircle2 },
+  { value: 'campaign', label: 'Kampanya / Fırsat', color: 'border-purple-200 bg-purple-50 text-purple-800' },
+  { value: 'info', label: 'Bilgilendirme / Güncelleme', color: 'border-blue-200 bg-blue-50 text-blue-800' },
+  { value: 'warning', label: 'Önemli Uyarı', color: 'border-amber-200 bg-amber-50 text-amber-800' },
+  { value: 'success', label: 'Başarı / Tebrik', color: 'border-emerald-200 bg-emerald-50 text-emerald-800' },
 ];
 
 export default function Announcements() {
