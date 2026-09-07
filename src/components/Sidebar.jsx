@@ -1,14 +1,15 @@
 import { 
-  Building2, LayoutDashboard, LogOut, ShieldCheck, ExternalLink, Menu, X, Megaphone 
+  Building2, LayoutDashboard, LogOut, ShieldCheck, ExternalLink, Menu, X, Megaphone, Sparkles 
 } from 'lucide-react';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'clinics', label: 'Klinikler', icon: Building2 },
+  { id: 'demo-requests', label: 'Demo Talepleri', icon: Sparkles },
   { id: 'announcements', label: 'Duyurular & Kampanya', icon: Megaphone },
 ];
 
-export default function Sidebar({ activeTab, setActiveTab, mobileOpen, setMobileOpen, onLogout, clinicCount = 0 }) {
+export default function Sidebar({ activeTab, setActiveTab, mobileOpen, setMobileOpen, onLogout, clinicCount = 0, demoRequestsCount = 0 }) {
   const content = (
     <>
       {/* Logo */}
@@ -50,6 +51,11 @@ export default function Sidebar({ activeTab, setActiveTab, mobileOpen, setMobile
               {item.id === 'clinics' && clinicCount > 0 && (
                 <span className="inline-flex items-center justify-center px-2 py-0.5 bg-slate-800 text-slate-300 text-[11px] font-bold rounded-full">
                   {clinicCount}
+                </span>
+              )}
+              {item.id === 'demo-requests' && demoRequestsCount > 0 && (
+                <span className="inline-flex items-center justify-center px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[11px] font-bold rounded-full">
+                  {demoRequestsCount}
                 </span>
               )}
             </button>

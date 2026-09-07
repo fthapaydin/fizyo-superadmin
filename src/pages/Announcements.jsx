@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import { useToast } from '../components/ui/Toast';
 import { 
   Megaphone, Plus, Trash2, CheckCircle2, AlertTriangle, Info, Sparkles, X, Radio 
 } from 'lucide-react';
@@ -37,6 +38,7 @@ export default function Announcements() {
       setAnnouncements(data || []);
     } catch (err) {
       console.error('Duyurular yüklenemedi:', err);
+      toast.error('Duyurular yüklenirken hata oluştu.');
     } finally {
       setLoading(false);
     }
@@ -48,7 +50,10 @@ export default function Announcements() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title.trim() || !form.message.trim()) return;
+    if (!form.title.trim() || !form.message.trim()) {
+      toast.error('Lütfen başlık ve mesaj alanlarını doldurunuz.');
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -59,9 +64,10 @@ export default function Announcements() {
       if (error) throw error;
       setShowModal(false);
       setForm({ title: '', message: '', type: 'campaign', is_active: true });
+      toast.success('Duyuru başarıyla yayınlandı!');
       fetchAnnouncements();
     } catch (err) {
-      toast.success(err.message || 'Duyuru kaydedilirken hata oluştu.');
+      toast.error(err.message || 'Duyuru kaydedilirken hata oluştu.');
     } finally {
       setSubmitting(false);
     }
@@ -75,9 +81,10 @@ export default function Announcements() {
         .eq('id', item.id);
 
       if (error) throw error;
+      toast.success(item.is_active ? 'Duyuru yayından kaldırıldı.' : 'Duyuru canlıda yayına alındı.');
       fetchAnnouncements();
     } catch (err) {
-      toast.success(err.message || 'Durum güncellenemedi.');
+      toast.error(err.message || 'Durum güncellenemedi.');
     }
   };
 
@@ -91,9 +98,10 @@ export default function Announcements() {
         .eq('id', item.id);
 
       if (error) throw error;
+      toast.success('Duyuru başarıyla silindi.');
       fetchAnnouncements();
     } catch (err) {
-      toast.success(err.message || 'Silme işlemi başarısız.');
+      toast.error(err.message || 'Silme işlemi başarısız.');
     }
   };
 
@@ -163,7 +171,7 @@ export default function Announcements() {
                         </span>
                       )}
                     </div>
-                    <p className="text-[13px] text-gray-600 leading-relaxed">{item.message}</p>
+                    <p className="text-[13px] text-gray-600 leading-relaxed whitespace-pre-line">{item.message}</p>
                     <p className="text-[10px] text-gray-400">
                       {new Date(item.created_at).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
@@ -223,7 +231,7 @@ export default function Announcements() {
                   placeholder="Örn: 🎉 Yeni Güncelleme: 81 İl Desteği Eklendi!"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-[13px] text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
+                  className="w-full h-11 px-3.5 rounded-xl border border-gray-200 text-[13px] text-gray-900 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
                 />
               </div>
 
@@ -256,7 +264,7 @@ export default function Announcements() {
                   placeholder="Klinik panellerinde görüntülenecek detaylı açıklama..."
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full p-3 rounded-xl border border-gray-200 text-[13px] text-gray-900 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none"
+                  className="w-full p-3 rounded-xl border border-gray-200 text-[13px] text-gray-900 focus:outline-hidden focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 resize-none"
                 />
               </div>
 

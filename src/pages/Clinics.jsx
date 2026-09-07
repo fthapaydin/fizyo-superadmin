@@ -7,13 +7,10 @@ import {
   Building2, Plus, Search, Pencil, Trash2, Check, Copy, ExternalLink, X, MapPin, QrCode 
 } from 'lucide-react';
 
-export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
+export default function Clinics({ clinics, refresh, initialAddOpen = false, initialData = null }) {
   const { toast } = useToast();
   const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(initialAddOpen);
-  useEffect(() => {
-    if (initialAddOpen) setShowModal(true);
-  }, [initialAddOpen]);
+  const [showModal, setShowModal] = useState(initialAddOpen || !!initialData);
   const [modalMode, setModalMode] = useState('add'); // 'add' | 'edit'
   const [selectedClinic, setSelectedClinic] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -60,6 +57,40 @@ export default function Clinics({ clinics, refresh, initialAddOpen = false }) {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   };
+
+  useEffect(() => {
+    if (initialAddOpen) {
+      setShowModal(true);
+      setModalMode('add');
+    }
+  }, [initialAddOpen]);
+
+  useEffect(() => {
+    if (initialData) {
+      const cityCandidate = initialData.city ? initialData.city.split(',')[0].trim() : 'İstanbul';
+      const matchedCity = TURKEY_CITIES.find(c => c.name.toLowerCase() === cityCandidate.toLowerCase()) || TURKEY_CITIES[0];
+      const districtCandidate = initialData.city && initialData.city.split(',')[1] ? initialData.city.split(',')[1].trim() : (matchedCity.districts[0] || 'Kadıköy');
+
+      setFormData({
+        name: initialData.clinic_name || '',
+        slug: slugify(initialData.clinic_name || ''),
+        owner_name: initialData.full_name || '',
+        phone: initialData.phone || '',
+        email: initialData.email || '',
+        password: 'demo' + Math.floor(100 + Math.random() * 900),
+        status: initialData.plan === '14-gun-deneme' ? 'deneme' : 'aktif',
+        plan: initialData.plan === 'yillik-kampanya' ? 'kurumsal' : 'standart',
+        city: matchedCity.name,
+        district: districtCandidate,
+        address: '',
+        theme_color: '#059669',
+        logo_url: '',
+        notes: initialData.notes ? `[Demo Başvuru Notu]: ${initialData.notes}` : '',
+      });
+      setModalMode('add');
+      setShowModal(true);
+    }
+  }, [initialData]);
 
   const handleNameChange = (val) => {
     setFormData((prev) => ({

@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
@@ -6,12 +6,15 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Clinics from './pages/Clinics';
 import Announcements from './pages/Announcements';
+import DemoRequests from './pages/DemoRequests';
+import { fetchAllDemoRequests } from './lib/demoRequestsUtils';
 import { Loader2 } from 'lucide-react';
 
 const pageMeta = {
-  dashboard:     { title: 'SÃ¼per Admin Dashboard',     subtitle: 'Platform geneli performans ve istatistikler' },
-  clinics:       { title: 'Klinik YÃ¶netimi',           subtitle: 'KayÄ±tlÄ± klinikleri ekleyin, dÃ¼zenleyin ve yÃ¶netin' },
-  announcements: { title: 'Duyurular & Kampanya',      subtitle: 'TÃ¼m klinik panellerine canlÄ± duyuru ve kampanya yayÄ±nÄ± yapÄ±n' },
+  dashboard:       { title: 'Süper Admin Dashboard',     subtitle: 'Platform geneli performans ve istatistikler' },
+  clinics:         { title: 'Klinik Yönetimi',           subtitle: 'Kayıtlı klinikleri ekleyin, düzenleyin ve yönetin' },
+  'demo-requests': { title: 'Demo Talepleri',            subtitle: 'Web sitesi üzerinden gelen 14 günlük deneme ve kampanya başvuruları' },
+  announcements:   { title: 'Duyurular & Kampanya',      subtitle: 'Tüm klinik panellerine canlı duyuru ve kampanya yayını yapın' },
 };
 
 function App() {
@@ -29,17 +32,20 @@ function App() {
 
   const [clinics, setClinics] = useState([]);
   const [stats, setStats] = useState({ patientCount: 0, sessionCount: 0 });
+  const [demoRequestsCount, setDemoRequestsCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [triggerAddClinic, setTriggerAddClinic] = useState(false);
+  const [prefillClinicData, setPrefillClinicData] = useState(null);
 
   const fetchData = async () => {
     if (!adminUser) return;
     setLoading(true);
     try {
-      const [clinicsRes, patientsRes, sessionsRes] = await Promise.all([
+      const [clinicsRes, patientsRes, sessionsRes, demoReqs] = await Promise.all([
         supabase.from('clinics').select('*').order('created_at', { ascending: false }),
         supabase.from('patients').select('id', { count: 'exact', head: true }),
         supabase.from('sessions').select('id', { count: 'exact', head: true }),
+        fetchAllDemoRequests(supabase).catch(() => []),
       ]);
 
       setClinics(clinicsRes.data || []);
@@ -47,8 +53,11 @@ function App() {
         patientCount: patientsRes.count || 0,
         sessionCount: sessionsRes.count || 0,
       });
+
+      const pendingDemos = (demoReqs || []).filter(d => d.status === 'bekliyor').length;
+      setDemoRequestsCount(pendingDemos);
     } catch (err) {
-      console.error('Veri Ã§ekme hatasÄ±:', err);
+      console.error('Veri çekme hatası:', err);
     } finally {
       setLoading(false);
     }
@@ -65,6 +74,12 @@ function App() {
     setAdminUser(null);
   };
 
+  const handleConvertToClinic = (demoReq) => {
+    setPrefillClinicData(demoReq);
+    setTriggerAddClinic(true);
+    setActiveTab('clinics');
+  };
+
   if (!adminUser) {
     return <Login onLogin={setAdminUser} />;
   }
@@ -75,11 +90,18 @@ function App() {
     <div className="flex h-screen overflow-hidden font-[Inter]">
       <Sidebar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          if (tab !== 'clinics') {
+            setPrefillClinicData(null);
+            setTriggerAddClinic(false);
+          }
+        }}
         mobileOpen={mobileOpen}
         setMobileOpen={setMobileOpen}
         onLogout={handleLogout}
         clinicCount={clinics.length}
+        demoRequestsCount={demoRequestsCount}
       />
 
       <div className="flex-1 flex flex-col min-w-0">
@@ -104,8 +126,9 @@ function App() {
                     stats={stats}
                     onNavigateClinics={() => setActiveTab('clinics')}
                     onAddClinicClick={() => {
-                      setActiveTab('clinics');
+                      setPrefillClinicData(null);
                       setTriggerAddClinic(true);
+                      setActiveTab('clinics');
                     }}
                   />
                 )}
@@ -114,6 +137,12 @@ function App() {
                     clinics={clinics}
                     refresh={fetchData}
                     initialAddOpen={triggerAddClinic}
+                    initialData={prefillClinicData}
+                  />
+                )}
+                {activeTab === 'demo-requests' && (
+                  <DemoRequests 
+                    onConvertToClinic={handleConvertToClinic} 
                   />
                 )}
                 {activeTab === 'announcements' && (
@@ -129,4 +158,3 @@ function App() {
 }
 
 export default App;
-
